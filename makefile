@@ -1,5 +1,5 @@
 BUILD_DIR     = build
-PROGRAM       = output.exe
+PROGRAM       = output
 DEBUG_ENABLED = 1
 
 CC_PATH = gcc
@@ -27,14 +27,8 @@ C_OBJECT_LIST += $(addprefix $(BUILD_DIR)/, $(notdir $(C_SOURCE_LIST:.c=.o)))
 vpath %.c $(sort $(dir $(C_SOURCE_LIST)))
 
 LIB_OBJECT_LIST = \
-	lib/libglfw3.a \
-	lib/OpenAL32.lib \
-	lib/libsndfile.a \
-	-lopengl32 \
-	-lglu32 \
-	-lgdi32 \
-	-lkernel32 \
-	-luser32
+	-lGL -lglfw -lX11 -lpthread -lXrandr -ldl -lm
+#  -lXi
 
 LIB_INCLUDE_LIST = -I include -I src
 
@@ -65,8 +59,6 @@ $(BUILD_DIR)/%.o : %.c makefile | $(BUILD_DIR)
 
 $(BUILD_DIR):
 	mkdir $(BUILD_DIR)
-	copy lib\\OpenAL32.lib $(BUILD_DIR)\\OpenAL32.lib
-	copy lib\\OpenAL32.dll $(BUILD_DIR)\\OpenAL32.dll
 
 clean:
 	rmdir /s /q $(BUILD_DIR)

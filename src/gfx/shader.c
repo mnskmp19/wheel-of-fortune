@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <assert.h>
+#include <inttypes.h>
 
 #include "util/memory_safety.h"
 #include "util/error_handling.h"
@@ -186,7 +187,7 @@ void shader_set_uniform_mat4f_array(const struct shader* shader, const char* nam
 	if (indexed_name == NULL) critical_error(ERROR_MEMORY);
 
   for(size_t i = 0; i < size; i++){
-    sprintf_s(indexed_name, indexed_name_len, "%s[%d]", name, i);
+    snprintf(indexed_name, indexed_name_len, "%s[%"PRIu64"]", name, i);
     GLint location = glGetUniformLocation(shader->id, indexed_name);
     glUniformMatrix4fv(location, 1, GL_FALSE, (const float*)data[i].raw); // GL_FALSE because of column-major order
   }

@@ -47,22 +47,6 @@ struct window window_create(int width, int height, const char* window_name, int 
     window_resize(&window, width, height);
   }
 
-  // openal stuff
-  window.alc_device = alcOpenDevice(NULL); // open default device
-  if(window.alc_device == NULL) critical_error(ERROR_OPENAL);
-
-  window.alc_context = alcCreateContext(window.alc_device, NULL);
-  if(window.alc_context == NULL) critical_error(ERROR_OPENAL);
-
-  if(!alcMakeContextCurrent(window.alc_context)) critical_error(ERROR_OPENAL);
-
-  const ALCchar* sdev_name = NULL;
-  if(alcIsExtensionPresent(window.alc_device, "ALC_ENUMERATE_ALL_EXT"))
-    sdev_name = alcGetString(window.alc_device, ALC_ALL_DEVICES_SPECIFIER);
-  if(sdev_name == NULL || alcGetError(window.alc_device) != ALC_NO_ERROR)
-    sdev_name = alcGetString(window.alc_device, ALC_DEVICE_SPECIFIER);
-  printf("Audio device openned \"%s\"\n", sdev_name);
-
   // callbacks  
   glfwSetWindowSizeCallback (window.glfw_window, window_size_callback);
   glfwSetKeyCallback        (window.glfw_window, key_callback);
@@ -77,11 +61,6 @@ struct window window_create(int width, int height, const char* window_name, int 
 
 void window_destroy(struct window* window){
   glfwDestroyWindow(window->glfw_window);
-
-  if(!alcMakeContextCurrent(NULL)) critical_error(ERROR_OPENAL);
-
-  alcDestroyContext(window->alc_context);
-  if(!alcCloseDevice(window->alc_device)) critical_error(ERROR_OPENAL);
   
   // terminate glfw
   glfwTerminate();

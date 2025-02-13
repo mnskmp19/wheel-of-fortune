@@ -3,7 +3,6 @@
 
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
-#include <AL\alc.h>
 
 #define DEFAULT_WINDOW_W (800.0f)
 #define DEFAULT_WINDOW_H (450.0f)
@@ -12,8 +11,6 @@
 
 struct window {
   GLFWwindow* glfw_window;
-  ALCdevice* alc_device;
-  ALCcontext* alc_context;
   
   // width, height
   int w;
