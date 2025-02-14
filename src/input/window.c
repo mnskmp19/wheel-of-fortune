@@ -26,8 +26,8 @@ struct window window_create(int width, int height, const char* window_name, int 
     glfwMakeContextCurrent(window.glfw_window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    // glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    // glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     glfwSetCursorPos(window.glfw_window, vidmode->width / 2.0f, vidmode->height / 2.0f);
 
@@ -39,8 +39,8 @@ struct window window_create(int width, int height, const char* window_name, int 
     glfwMakeContextCurrent(window.glfw_window);
     gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
-    glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    // glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    // glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window.glfw_window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
     glfwSetCursorPos(window.glfw_window, width / 2.0f, height / 2.0f);
 

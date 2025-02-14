@@ -11,7 +11,7 @@ double delta_time = 0.0f;
 
 #define CALLBACK_OUTFILE stdout
 
-#define START_IN_FULLSCREEN 1
+#define START_IN_FULLSCREEN 0
 
 void
 window_init(void){
