@@ -75,7 +75,12 @@ int main(void){
     wof_update(&wof, delta_time);
 
     // render
-    glClearColor(0.2f, 0.3f, 0.5f, 0.0f);
+    glClearColor(
+      (28.0f) / (256.0f),
+      (28.0f) / (256.0f),
+      (28.0f) / (256.0f),
+      1.0f
+    );
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     wof_render(&wof);
     
@@ -89,7 +94,7 @@ int main(void){
     while(when_a_second_passes > 1.0f){
       char buffer[32] = { 0 };
       snprintf(buffer, 32, "hello - %u fps", frames_per_second);
-      if(window_is_fullscreen()) printf("FPS = %u\n", frames_per_second);
+      // if(window_is_fullscreen()) printf("FPS = %u\n", frames_per_second);
       window_set_title(buffer);
       
       when_a_second_passes -= 1.0f;

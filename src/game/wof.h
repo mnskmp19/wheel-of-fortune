@@ -13,12 +13,13 @@ wof_assets_check_if_valid(void);
 void
 wof_assets_free(void);
 
-#define WOF_PARTS 3
+#define WOF_PARTS 5
 
 struct wof {
-  struct mesh2d background;
-  struct mesh2d arrow;
-  struct mesh2d images[WOF_PARTS];
+  struct mesh2d wheel_geometry;
+  struct mesh2d wheel_images[WOF_PARTS];
+  struct mesh2d static_geometry;
+  struct mesh2d static_image;
 
   enum wof_state {
     WOF_STATE_STATIC,
