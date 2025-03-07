@@ -11,10 +11,14 @@
 #define WOF_MIN_SPEED 8.0f
 #define WOF_MAX_SPEED 12.0f
 
-static vec4s wof_colors[WOF_PARTS] = {
+static const vec4s wof_colors[WOF_PARTS] = {
   { .r = 1.0f, .g = 0.0f, .b = 0.0f, .a = 1.0f, },
   { .r = 0.0f, .g = 1.0f, .b = 0.0f, .a = 1.0f, },
   { .r = 0.0f, .g = 0.0f, .b = 1.0f, .a = 1.0f, },
+};
+
+static const vec4s wof_border_color = {
+  .r = 0.0f, .g = 0.0f, .b = 0.0f, .a = 1.0f,
 };
 
 static struct texture wof_textures[WOF_PARTS] = { 0 };
@@ -116,7 +120,7 @@ wof_append_image(struct wof *wof,  size_t tex_idx, float r, float angle, vec2s i
 }
 
 static void
-wof_append_sector(struct wof *wof, float start_angle, float end_angle, size_t index){
+wof_append_sector(struct wof *wof, float start_angle, float end_angle, vec4s color){
 
   assert(end_angle > start_angle);
   size_t parts = (end_angle - start_angle) / (2.0f * M_PI) * TRIS_PER_CIRCLE;
@@ -127,11 +131,62 @@ wof_append_sector(struct wof *wof, float start_angle, float end_angle, size_t in
       (vec2s){ .x = 0.0f, .y = 0.0f, },
       glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle +  i    * (2.0f * M_PI) / TRIS_PER_CIRCLE),
       glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle + (i+1) * (2.0f * M_PI) / TRIS_PER_CIRCLE),
-      wof_colors[index]
+      color
     );
   }
 
 }
+
+static void
+wof_append_sector_border(struct wof *wof, float start_angle, float end_angle, vec4s color){
+
+  assert(end_angle > start_angle);
+  size_t parts = (end_angle - start_angle) / (2.0f * M_PI) * TRIS_PER_CIRCLE;
+
+  for(size_t i = 0; i < parts; i++){
+    
+    mesh2d_append_triangle_plain(
+      &wof->background,
+      (vec2s){ .x = 0.0f, .y = 0.0f, },
+      glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle +  i    * (2.0f * M_PI) / TRIS_PER_CIRCLE),
+      glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle + (i+1) * (2.0f * M_PI) / TRIS_PER_CIRCLE),
+      color
+    );
+  }
+  // fill in the last triangle so the border is symmetric
+  mesh2d_append_triangle_plain(
+    &wof->background,
+    (vec2s){ .x = 0.0f, .y = 0.0f, },
+    glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle + parts * (2.0f * M_PI) / TRIS_PER_CIRCLE),
+    glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, end_angle),
+    color
+  );
+
+  vec2s p = glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle + (end_angle - start_angle) / 2.0f);
+  vec2s A = glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, start_angle);
+  vec2s B = glms_vec2_rotate((vec2s){ .x = 0.0f, .y = 1.0f, }, end_angle);
+  vec2s C = glms_vec2_scale(
+    p,
+    glms_vec2_dot(A, p) 
+      / (glms_vec2_norm(A) * glms_vec2_norm(p))
+  );
+  vec2s Ap = glms_vec2_sub(A, C);
+  vec2s Bp = glms_vec2_sub(B, C);
+
+  mesh2d_append_triangle_plain(
+    &wof->background,
+    (vec2s){ .x = 0.0f, .y = 0.0f, }, Ap, A,
+    color
+  );
+  mesh2d_append_triangle_plain(
+    &wof->background,
+    (vec2s){ .x = 0.0f, .y = 0.0f, }, B, Bp,
+    color
+  );
+
+}
+
+#define SECTOR_BORDER_WIDTH 5.0f
 
 struct wof
 wof_create(void){
@@ -158,13 +213,27 @@ wof_create(void){
   );
 
   for(size_t i = 0; i < WOF_PARTS; i++){
-    wof_append_sector(&wof, i * (2.0f * M_PI / WOF_PARTS), (i+1) * (2.0f * M_PI / WOF_PARTS), i);
+    wof_append_sector(
+      &wof,
+      glm_rad( i    * 360.0f / WOF_PARTS),
+      glm_rad((i+1) * 360.0f / WOF_PARTS),
+      wof_colors[i]
+    );
   }
-  
+
+  for(size_t i = 0; i < WOF_PARTS; i++){
+    wof_append_sector_border(
+      &wof,
+      glm_rad(i * 360.0f / WOF_PARTS - SECTOR_BORDER_WIDTH / 2.0f),
+      glm_rad(i * 360.0f / WOF_PARTS + SECTOR_BORDER_WIDTH / 2.0f),
+      wof_border_color
+    );
+  }
+    
   // append images manually
-  wof_append_image(&wof, 0, 0.6f,  0 * (2.0f * M_PI / WOF_PARTS) + M_PI / WOF_PARTS, (vec2s){ .x = 1.2f, .y = 0.3f, });
-  wof_append_image(&wof, 1, 0.55f, 1 * (2.0f * M_PI / WOF_PARTS) + M_PI / WOF_PARTS, (vec2s){ .x = 0.6f, .y = 0.6f, });
-  wof_append_image(&wof, 2, 0.6f,  2 * (2.0f * M_PI / WOF_PARTS) + M_PI / WOF_PARTS, (vec2s){ .x = 1.2f, .y = 0.7f, });
+  wof_append_image(&wof, 0, 0.6f,  glm_rad(0 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 1.2f, .y = 0.3f, });
+  wof_append_image(&wof, 1, 0.55f, glm_rad(1 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.6f, .y = 0.6f, });
+  wof_append_image(&wof, 2, 0.6f,  glm_rad(2 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 1.2f, .y = 0.7f, });
 
   mesh2d_buffer_data(&wof.background);
   mesh2d_buffer_data(&wof.arrow);
