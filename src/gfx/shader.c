@@ -41,6 +41,10 @@ static void read_file_into_string(
   const char* input_file_path
 ){
   FILE* input_file = fopen(input_file_path, "r");
+  if(input_file == NULL) {
+    printf("File %s cannot be opened.\n", input_file_path);
+    return;
+  }
 
   char input_char = EOF;
   while((input_char = fgetc(input_file)) != EOF){

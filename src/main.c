@@ -8,8 +8,30 @@
 #include "util/utils.h"
 
 #include "game/wof.h"
+#include <unistd.h>
+#include <string.h>
 
 int main(void){
+
+  char cwd[1024];
+  if(getcwd(cwd, array_size(cwd))){
+    printf("cwd = %s\n", cwd);
+
+    size_t i = strlen(cwd);
+    while(i-- > 0){
+      if(cwd[i] == '/') break;
+    }
+    if(strcmp(&cwd[i], "/wheel-of-fortune") != 0) {
+      printf("Please invoke this program from wheel-of-fortune directory.\n");
+      return -1;
+    }
+  }
+  else {
+    printf("CWD error.\n");
+    return -1;
+  }
+  
+
   _memory_debug_init_();
   
   // init statics from callback header
