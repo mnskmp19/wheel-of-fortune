@@ -305,11 +305,11 @@ wof_create(void){
   }
     
   // append images manually
-  wof_append_image(&wof, 0, 0.65f, glm_rad(0 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.5f, .y = 0.6f, });
-  wof_append_image(&wof, 1, 0.7f,  glm_rad(1 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.5f, .y = 0.5f, });
-  wof_append_image(&wof, 2, 0.65f, glm_rad(2 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.5f, .y = 0.6f, });
-  wof_append_image(&wof, 3, 0.7f,  glm_rad(3 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.5f, .y = 0.5f, });
-  wof_append_image(&wof, 4, 0.675f,  glm_rad(4 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.5f, .y = 0.55f, });
+  wof_append_image(&wof, 0, 0.65f, glm_rad(0 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.6f, .y = 0.6f, });
+  wof_append_image(&wof, 1, 0.65f, glm_rad(1 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.6f, .y = 0.6f, });
+  wof_append_image(&wof, 2, 0.65f, glm_rad(2 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.6f, .y = 0.6f, });
+  wof_append_image(&wof, 3, 0.65f, glm_rad(3 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.6f, .y = 0.6f, });
+  wof_append_image(&wof, 4, 0.65f, glm_rad(4 * (360.0f / WOF_PARTS) + 180.0f / WOF_PARTS), (vec2s){ .x = 0.6f, .y = 0.6f, });
 
   wof_append_static_circle(&wof, 0.25f, wof_border_color);
   wof_append_static_image(
